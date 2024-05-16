@@ -15,6 +15,22 @@ public class LeaseContract extends Contract {
         return getVehicleSold().getPrice() * .04 / 12;
     }
 
+    @Override
+    public String toString() {
+        return "LEASE|"
+                + getDate() + "|"
+                + getCustomerName() + "|"
+                + getCustoemrEmail() + "|"
+                + getVehicleSold().getVin() + "|"
+                + getVehicleSold().getMake() + "|"
+                + getVehicleSold().getModel() + "|"
+                + getVehicleSold().getColor() + "|"
+                + getExpectedEndingValue() + "|"
+                + getLeaseFee() + "|"
+                + getTotalPrice() + "|"
+                + getMonthlyPayment() + "|";
+    }
+
     public double getExpectedEndingValue() { return getVehicleSold().getPrice() / 2; }
     public double getLeaseFee() { return getVehicleSold().getPrice() * .07; }
 }

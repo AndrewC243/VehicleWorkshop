@@ -1,5 +1,6 @@
 package org.example;
 
+
 public class SalesContract extends Contract {
     private boolean financed;
 
@@ -24,6 +25,25 @@ public class SalesContract extends Contract {
         if (price >= 10000)
             return (price * 0.0425 / 12) + (price / 48);
         return (price * 0.0525 / 12) + (price / 24);
+    }
+
+    @Override
+    public String toString() {
+        return "SALE|"
+                + getDate() + "|"
+                + getCustomerName() + "|"
+                + getCustoemrEmail() + "|"
+                + getVehicleSold().getVin() + "|"
+                + getVehicleSold().getYear() + "|"
+                + getVehicleSold().getMake() + "|"
+                + getVehicleSold().getModel() + "|"
+                + getVehicleSold().getColor() + "|"
+                + getSalesTax() + "|"
+                + getRecordingFee() + "|"
+                + getProcessingFee() + "|"
+                + getTotalPrice() + "|"
+                + (isFinanced() ? "YES" : "NO") + "|"
+                + getMonthlyPayment();
     }
 
     public double getRecordingFee() { return 100; }
