@@ -7,7 +7,7 @@ public class LeaseContract extends Contract {
 
     @Override
     public double getTotalPrice() {
-        return (getMonthlyPayment() * 36) + getLeaseFee();
+        return getExpectedEndingValue() + getLeaseFee();
     }
 
     @Override
@@ -22,9 +22,13 @@ public class LeaseContract extends Contract {
                 + getCustomerName() + "|"
                 + getCustoemrEmail() + "|"
                 + getVehicleSold().getVin() + "|"
+                + getVehicleSold().getYear() + "|"
                 + getVehicleSold().getMake() + "|"
                 + getVehicleSold().getModel() + "|"
+                + getVehicleSold().getVehicleType() + "|"
                 + getVehicleSold().getColor() + "|"
+                + getVehicleSold().getOdometer() + "|"
+                + getVehicleSold().getPrice() + "|"
                 + getExpectedEndingValue() + "|"
                 + getLeaseFee() + "|"
                 + getTotalPrice() + "|"

@@ -1,5 +1,9 @@
 package org.example;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,7 +11,7 @@ public class Interface {
 
     private Dealership dealership;
 
-    private void init(){
+    private void init() {
 
         List<Dealership> dealerships = FileManager.getDealership();
 
@@ -15,9 +19,9 @@ public class Interface {
 
     }
 
-    public void homeScreen(){
+    public void homeScreen() {
 
-        while(true){
+        while (true) {
 
             init();
 
@@ -33,7 +37,7 @@ public class Interface {
                      -----------'  "-____-"  `-------------------------------'  "-____-"
                     """);
 
-            System.out.println("\nWelcome to the inventory manager of " + dealership.getName() +", esteemed employee!");
+            System.out.println("\nWelcome to the inventory manager of " + dealership.getName() + ", esteemed employee!");
 
             System.out.println("Now, what would you like to do? Select a number to get started.");
 
@@ -47,6 +51,8 @@ public class Interface {
                     7) List All Vehicles
                     8) Add A Vehicle
                     9) Remove A Vehicle
+                    10) Buy a vehicle
+                    11) Lease a vehicle
                     99) Quit
                     """);
 
@@ -54,7 +60,7 @@ public class Interface {
 
             int homeScreenInput = Integer.parseInt(userInput.nextLine());
 
-            switch(homeScreenInput){
+            switch (homeScreenInput) {
                 case 1:
                     processGetByPriceRequest(true);
                     break;
@@ -82,6 +88,12 @@ public class Interface {
                 case 9:
                     processRemoveVehicleByVIN();
                     break;
+                case 10:
+                    processBuyVehicleRequest();
+                    break;
+                case 11:
+                    processLeaseVehicleRequest();
+                    break;
                 case 99:
                     System.exit(0);
                     break;
@@ -93,9 +105,9 @@ public class Interface {
 
     }
 
-    public void processGetByPriceRequest(boolean isEnabled){
+    public void processGetByPriceRequest(boolean isEnabled) {
 
-        while(isEnabled){
+        while (isEnabled) {
 
             Scanner userInput = new Scanner(System.in);
 
@@ -119,9 +131,9 @@ public class Interface {
 
     }
 
-    public void processGetByMakeModelRequest(boolean isEnabled){
+    public void processGetByMakeModelRequest(boolean isEnabled) {
 
-        while(isEnabled) {
+        while (isEnabled) {
 
             Scanner userInput = new Scanner(System.in);
 
@@ -142,9 +154,10 @@ public class Interface {
         }
 
     }
-    public void processGetByMileage(boolean isEnabled){
+
+    public void processGetByMileage(boolean isEnabled) {
         Scanner scanner = new Scanner(System.in);
-        while(isEnabled){
+        while (isEnabled) {
             System.out.println("Filter Vehicle by Mileage: ");
             System.out.println("Enter the lowest mileage here. ");
             int lowestMileage = scanner.nextInt();
@@ -155,9 +168,10 @@ public class Interface {
         }
 
     }
-    public void processGetByVehicleType(boolean isEnabled){
+
+    public void processGetByVehicleType(boolean isEnabled) {
         Scanner scanner = new Scanner(System.in);
-        while(isEnabled){
+        while (isEnabled) {
             System.out.println("Filter Vehicle by Vehicle Type");
             System.out.println("Enter the vehicle type here (Ex: SUV/Van): ");
             String vehicleType = scanner.nextLine();
@@ -173,6 +187,7 @@ public class Interface {
         int year = userInput.nextInt();
         FileManager.displayVehicles(dealership.getVehiclesByYear(year));
     }
+
     public void processAddVehicle() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Here is where you add vehicles.");
@@ -195,5 +210,68 @@ public class Interface {
         System.out.println("Enter the vehicle color here:");
         String color = userInput.nextLine();
         FileManager.displayVehicles(dealership.getVehiclesByColor(color));
+    }
+
+    public void processBuyVehicleRequest() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("What is the VIN of the vehicle you would like to purchase?");
+        int vin;
+        try {
+            vin = scanner.nextInt();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+        for (Vehicle v : dealership.getInventory()) {
+            if (v.getVin() == vin) {
+                System.out.println("What is your name?");
+                String name = scanner.nextLine();
+                System.out.println("What is your email address?");
+                String email = scanner.nextLine();
+                System.out.println("Would you like to finance the vehicle? (yes/no)");
+                boolean finance = scanner.nextLine().equalsIgnoreCase("yes");
+                ContractDataManager.saveContract(new SalesContract(
+                        LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+                        name,
+                        email,
+                        v,
+                        finance
+                ));
+                dealership.removeVehicleByVIN(vin);
+                return;
+            }
+        }
+        System.out.println("Vehicle not found.");
+    }
+
+    public void processLeaseVehicleRequest() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("What is the VIN of the vehicle you'd like to lease?");
+        int vin;
+        try {
+            vin = scanner.nextInt();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input.");
+            return;
+        }
+        for (Vehicle v : dealership.getInventory()) {
+            if (v.getVin() == vin) {
+                System.out.println("What is your name?");
+                String name = scanner.nextLine();
+                System.out.println("What is your email address?");
+                String email = scanner.nextLine();
+                ContractDataManager.saveContract(new LeaseContract(
+                        LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+                        name,
+                        email,
+                        v
+                ));
+                dealership.removeVehicleByVIN(vin);
+                return;
+            }
+        }
+        System.out.println("Vehicle not found.");
     }
 }

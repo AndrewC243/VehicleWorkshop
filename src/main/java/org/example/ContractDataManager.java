@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class ContractDataManager {
-    public void saveDealership(Contract contract) {
+    public static void saveContract(Contract contract) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/main/resources/contracts.csv", true))) {
             if (contract instanceof SalesContract)
                 bw.append((SalesContract)contract + "\n");

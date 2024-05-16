@@ -11,11 +11,7 @@ public class SalesContract extends Contract {
 
     @Override
     public double getTotalPrice() {
-        if (!financed)
-            return (getSalesTax() + 1) * (getVehicleSold().getPrice() + getProcessingFee() + getRecordingFee());
-        if (getVehicleSold().getPrice() >= 10000)
-            return (getSalesTax() + 1) * (getMonthlyPayment() * 48 + getRecordingFee() + getProcessingFee());
-        return (getSalesTax() + 1) * (getMonthlyPayment() * 24 + getRecordingFee() + getProcessingFee());
+        return getSalesTax() + getRecordingFee() + getProcessingFee() + getVehicleSold().getPrice();
     }
 
     @Override
@@ -37,7 +33,10 @@ public class SalesContract extends Contract {
                 + getVehicleSold().getYear() + "|"
                 + getVehicleSold().getMake() + "|"
                 + getVehicleSold().getModel() + "|"
+                + getVehicleSold().getVehicleType() + "|"
                 + getVehicleSold().getColor() + "|"
+                + getVehicleSold().getOdometer() + "|"
+                + getVehicleSold().getPrice() + "|"
                 + getSalesTax() + "|"
                 + getRecordingFee() + "|"
                 + getProcessingFee() + "|"
@@ -52,7 +51,7 @@ public class SalesContract extends Contract {
             return 495;
         return 295;
     }
-    public double getSalesTax() { return 0.05; }
+    public double getSalesTax() { return 0.05 * getVehicleSold().getPrice(); }
 
     public boolean isFinanced() {
         return financed;
