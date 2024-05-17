@@ -12,7 +12,7 @@ public class LeaseContract extends Contract {
 
     @Override
     public double getMonthlyPayment() {
-        return getVehicleSold().getPrice() * .04 / 12;
+        return (getExpectedEndingValue() / 36) + ((0.04 / 24) * (getVehicleSold().getPrice() + getExpectedEndingValue()));
     }
 
     @Override
