@@ -19,8 +19,8 @@ public class SalesContract extends Contract {
         if (!financed) return 0;
         var price = getVehicleSold().getPrice();
         if (price >= 10000)
-            return (price * 0.0425 / 12) + (price / 48);
-        return (price * 0.0525 / 12) + (price / 24);
+            return (price * (0.0425 / 12 * Math.pow((0.0425 / 12) + 1, 48))) / (Math.pow(1 + (0.0425 / 12), 48) - 1);
+        return (price * (0.0525 / 12 * Math.pow((0.0525 / 12) + 1, 24))) / (Math.pow(1 + (0.0525 / 12), 24) - 1);
     }
 
     @Override
